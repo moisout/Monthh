@@ -36,10 +36,10 @@
             android:id="@+id/floating_action_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add_event"
             app:borderWidth="0dp"
-            android:layout_gravity="bottom|end"
             app:layout_anchorGravity="bottom|right|end" />
     </android.support.design.widget.CoordinatorLayout>
 

@@ -161,6 +161,7 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         /* Calendar Color */
         int color = Utils.getDisplayColorFromColor(cursor.getInt(AgendaWindowAdapter.INDEX_COLOR));
         holder.colorChip.setColor(color);
+        //holder.textContainer.setBackgroundColor(color);
 
         // What
         String titleString = cursor.getString(AgendaWindowAdapter.INDEX_TITLE);
