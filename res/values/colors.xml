@@ -19,9 +19,9 @@
 -->
 <resources>
 
-    <color name="colorPrimary">#41c3b1</color>
-    <color name="colorPrimaryDark">#388d7f</color>
-    <color name="colorAccent">#1dc1ab</color>
+    <color name="colorPrimary">#FF009688</color>
+    <color name="colorPrimaryDark">#00675b</color>
+    <color name="colorAccent">#52c7b8</color>
     <color name="colorOrangePrimary">#f1922d</color>
     <color name="colorOrangePrimaryDark">#b36f28</color>
     <color name="colorOrangeAccent">#de7302</color>
@@ -136,18 +136,18 @@
     <!-- Light color of text in the calendar view selection menu -->
     <color name="calendar_view_switch_menu_text_color_light">#FF888888</color>
     <!-- Color of the separator between items in the agenda list -->
-    <color name="agenda_list_separator_color">#FFBBBBBB</color>
+    <color name="agenda_list_separator_color">#ffffff</color>
     <!-- Text color of a selected items in the agenda list - trumps all other text colors -->
-    <color name="agenda_selected_background_color">@android:color/holo_blue_dark</color>
+    <color name="agenda_selected_background_color">#ffffff</color>
     <!-- Background color of a selected items in the agenda list -->
     <color name="agenda_selected_text_color">#FFFFFFFF</color>
     <!-- Text color of the "new event" hint in day and week views -->
     <color name="new_event_hint_text_color">#FFFFFFFF</color>
 
     <!-- Text color of a clicked event in the day/week view -->
-    <color name="day_event_clicked_background_color">#8033B5E5</color>
+    <color name="day_event_clicked_background_color">#32FFFFFF</color>
     <!-- background color for for clicked days in month view-->
-    <color name="day_clicked_background_color">#FF33B5E5</color>
+    <color name="day_clicked_background_color">#2FFFFFFF</color>
     <!-- background color for the past -->
     <color name="day_past_background_color">#22DDDDDD</color>
 
