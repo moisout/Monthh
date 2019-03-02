@@ -19,12 +19,45 @@
     <PreferenceCategory
         android:title="@string/preferences_about_title">
         <Preference
+            android:key="author"
+            android:title="@string/info"
+            android:summary="@string/preferences_about" />
+        <Preference
+            android:key="author"
+            android:title="@string/author"
+            android:summary="@string/author_name" />
+        <Preference
             android:key="build_version"
             android:title="@string/preferences_build_version" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_links">
         <Preference
-            android:title="@string/preferences_issues">
+            android:summary="@string/preferences_gitlab_info"
+            android:icon="@drawable/gitlab_icon"
+            android:title="@string/preferences_gitlab">
         <intent android:action="android.intent.action.VIEW"
-            android:data="https://github.com/Monthh-Group/Monthh-Calendar/issues" />
+            android:data="https://gitlab.com/mauriceoegerli/monthh" />
+        </Preference>
+        <Preference
+            android:summary="@string/about_share_info"
+            android:icon="@drawable/outline_share_black_48dp"
+            android:title="@string/share_label"
+            android:key="share_preference">
+        </Preference>
+        <Preference
+            android:summary="@string/about_projects_info"
+            android:icon="@drawable/outline_person_outline_black_48dp"
+            android:title="@string/about_projects">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://maurice.oeger.li" />
+        </Preference>
+        <Preference
+            android:summary="@string/about_etar_info"
+            android:icon="@drawable/etar_icon"
+            android:title="@string/about_etar">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/Etar-Group/Etar-Calendar" />
         </Preference>
     </PreferenceCategory>
 

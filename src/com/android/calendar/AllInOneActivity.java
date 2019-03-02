@@ -259,6 +259,7 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
 
     @Override
     protected void onCreate(Bundle icicle) {
+        setTheme(R.style.CalendarTheme_WithoutActionBar);
         if (Utils.getSharedPreference(this, OtherPreferences.KEY_OTHER_1, false)) {
             setTheme(R.style.CalendarTheme_WithActionBarWallpaper);
         }

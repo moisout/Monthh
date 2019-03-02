@@ -143,10 +143,7 @@ public class CalendarSettingsActivity extends PreferenceActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        } else if (item.getItemId() == R.id.action_add_account) {
+        if (item.getItemId() == R.id.action_add_account) {
             Intent nextIntent = new Intent(Settings.ACTION_ADD_ACCOUNT);
             final String[] array = { "com.android.calendar" };
             nextIntent.putExtra(Settings.EXTRA_AUTHORITIES, array);

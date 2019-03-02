@@ -19,6 +19,8 @@ package com.android.calendar.agenda;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.provider.CalendarContract.Attendees;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -160,8 +162,9 @@ public class AgendaAdapter extends ResourceCursorAdapter {
 
         /* Calendar Color */
         int color = Utils.getDisplayColorFromColor(cursor.getInt(AgendaWindowAdapter.INDEX_COLOR));
+        cardBackground(holder.textContainer, color);
+
         holder.colorChip.setColor(color);
-        //holder.textContainer.setBackgroundColor(color);
 
         // What
         String titleString = cursor.getString(AgendaWindowAdapter.INDEX_TITLE);
@@ -245,6 +248,13 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         }
     }
 
+    public static void cardBackground(View v, int backgroundColor) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setCornerRadius(16);
+        shape.setColor(backgroundColor);
+        v.setBackground(shape);
+    }
     static class ViewHolder {
 
         public static final int DECLINED_RESPONSE = 0;

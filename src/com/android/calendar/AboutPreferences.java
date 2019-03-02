@@ -17,9 +17,13 @@
 package com.android.calendar;
 
 import android.app.Activity;
+import android.content.ContentProvider;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import com.maurice.monthh.R;
@@ -40,5 +44,20 @@ public class AboutPreferences extends PreferenceFragment {
         } catch (NameNotFoundException e) {
             findPreference(BUILD_VERSION).setSummary("?");
         }
+
+        Preference sharePreference = findPreference("share_preference");
+        sharePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Check out Monthh on Gitlab: https://gitlab.com/mauriceoegerli/monthh");
+                sendIntent.setType("text/plain");
+                
+                startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_text)));
+                return false;
+            }
+        });
     }
+
 }
