@@ -53,8 +53,6 @@ public class AboutPreferences extends PreferenceFragment {
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
                         "Check out Monthh on Gitlab: https://gitlab.com/mauriceoegerli/monthh");
                 sendIntent.setType("text/plain");
-
-                
                 startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_text)));
                 return false;
             }

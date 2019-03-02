@@ -156,5 +156,10 @@
     <orderEntry type="module" module-name="chips" />
     <orderEntry type="module" module-name="calendar" />
     <orderEntry type="library" name="Gradle: org.apache.http.legacy-android-28" level="project" />
+    <orderEntry type="module" module-name="datetimepicker" />
+    <orderEntry type="module" module-name="timezonepicker" />
+    <orderEntry type="module" module-name="colorpicker" />
+    <orderEntry type="module" module-name="chips" />
+    <orderEntry type="module" module-name="calendar" />
   </component>
 </module>
