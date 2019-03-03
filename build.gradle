@@ -16,6 +16,7 @@ allprojects {
     }
 }
 
+
 project(':external:calendar') {
     apply plugin: 'android-library'
 
@@ -24,7 +25,7 @@ project(':external:calendar') {
         buildToolsVersion '28.0.3'
 
         defaultConfig {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 28
         }
 
@@ -55,7 +56,7 @@ project(':external:colorpicker') {
         buildToolsVersion '28.0.3'
 
         defaultConfig {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 28
         }
 
@@ -77,14 +78,14 @@ project(':external:datetimepicker') {
     apply plugin: 'android-library'
 
     dependencies {
-        implementation 'com.android.support:support-v4:27.1.1'
+        implementation 'com.android.support:support-v4:28.0.0'
     }
 
     android {
         compileSdkVersion 28
         buildToolsVersion '28.0.3'
         defaultConfig {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 28
         }
 
@@ -110,7 +111,7 @@ project(':external:timezonepicker') {
     apply plugin: 'android-library'
 
     dependencies {
-        implementation 'com.android.support:support-v4:27.1.1'
+        implementation 'com.android.support:support-v4:28.0.0'
     }
 
     android {
@@ -118,7 +119,7 @@ project(':external:timezonepicker') {
         buildToolsVersion '28.0.3'
 
         defaultConfig {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 28
         }
 
@@ -147,7 +148,7 @@ project(':external:chips') {
         buildToolsVersion '28.0.3'
 
         defaultConfig {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 28
         }
 
@@ -173,8 +174,8 @@ project(':external:chips') {
 apply plugin: 'com.android.application'
 
 dependencies {
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     implementation project(':external:calendar')
     implementation project(':external:colorpicker')
     implementation project(':external:datetimepicker')
@@ -188,7 +189,7 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
     }
 

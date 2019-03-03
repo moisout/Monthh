@@ -53,8 +53,7 @@
             android:layout_gravity="center_vertical"
             android:layout_width="48dip"
             android:layout_height="48dip"
-            android:src="@drawable/ic_contact_picture"
-            style="?android:attr/quickContactBadgeStyleWindowMedium" />
+            android:src="@drawable/outline_person_24" />
     </LinearLayout>
 
     <View
