@@ -164,15 +164,16 @@
             android:layout_width="wrap_content"
             android:layout_marginBottom="0dip"
             style="@style/TextAppearance.EditEvent_LabelSmall" />
+
         <Button
             android:id="@+id/rrule"
-            android:text="@string/does_not_repeat"
-            android:layout_height="wrap_content"
+            style="@android:style/Widget.Material.Button.Borderless"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="-12dip"
-            android:gravity="start|center_vertical"
             android:contentDescription="@string/accessibility_pick_recurrence"
-            style="@style/TextAppearance.EditEvent_SpinnerButton" />
+            android:gravity="start|center_vertical"
+            android:text="@string/does_not_repeat" />
     </LinearLayout>
 
     <View

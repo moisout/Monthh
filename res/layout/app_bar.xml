@@ -8,5 +8,6 @@
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/Widget.CalendarAppTheme.ActionBar"
+    app:popupTheme="@android:style/Widget.Material.Toolbar"
     app:theme="@style/ThemeOverlay.CalendarAppTheme.ActionBar"
     app:titleTextAppearance="?attr/settings_titleText" />
