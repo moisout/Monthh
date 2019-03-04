@@ -245,6 +245,7 @@ public class AlertActivity extends Activity implements OnClickListener {
 
             finish();
         }
+
     }
 
     public boolean isEmpty() {

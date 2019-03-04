@@ -73,6 +73,7 @@ public class AgendaByDayAdapter extends BaseAdapter {
         mTmpTime = new Time(mTimeZone);
     }
 
+
     public long getInstanceId(int position) {
         if (mRowInfo == null || position >= mRowInfo.size()) {
             return -1;

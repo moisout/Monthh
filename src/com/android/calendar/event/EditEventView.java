@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -94,6 +95,7 @@ import com.android.timezonepicker.TimeZoneInfo;
 import com.android.timezonepicker.TimeZonePickerDialog;
 import com.android.timezonepicker.TimeZonePickerUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -1635,12 +1637,14 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             View colorBar = view.findViewById(R.id.color);
+            CheckBox colorCheckBox = view.findViewById(R.id.visible_check_box);
             int colorColumn = cursor.getColumnIndexOrThrow(Calendars.CALENDAR_COLOR);
             int nameColumn = cursor.getColumnIndexOrThrow(Calendars.CALENDAR_DISPLAY_NAME);
             int ownerColumn = cursor.getColumnIndexOrThrow(Calendars.OWNER_ACCOUNT);
+
             if (colorBar != null) {
-                colorBar.setBackgroundColor(Utils.getDisplayColorFromColor(cursor
-                        .getInt(colorColumn)));
+
+                colorBar.setBackgroundColor(Utils.getDisplayColorFromColor(cursor.getInt(colorColumn)));
             }
 
             TextView name = (TextView) view.findViewById(R.id.calendar_name);

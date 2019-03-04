@@ -16,6 +16,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
@@ -66,8 +67,9 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="4dip"
         android:layout_marginRight="14dip"
-        android:contentDescription="@string/accessibility_sync_cal"
+        android:buttonTint="#000"
         android:clickable="false"
-        android:longClickable="false"
-        android:focusable="false" />
+        android:contentDescription="@string/accessibility_sync_cal"
+        android:focusable="false"
+        android:longClickable="false" />
 </LinearLayout>

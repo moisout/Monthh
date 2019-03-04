@@ -18,9 +18,14 @@ package com.android.calendar.selectcalendars;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.provider.CalendarContract.Calendars;
 import android.text.TextUtils;
@@ -34,11 +39,13 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.support.v4.widget.CompoundButtonCompat;
 
 import com.android.calendar.CalendarColorPickerDialog;
 import com.android.calendar.Utils;
 import com.android.calendar.selectcalendars.CalendarColorCache.OnCalendarColorsLoadedListener;
 
+import java.nio.channels.Selector;
 import java.util.HashMap;
 
 import com.maurice.monthh.R;
@@ -175,6 +182,19 @@ public class SelectCalendarsSyncAdapter extends BaseAdapter
         } else {
             setText(view, R.id.status, mNotSyncedString);
         }
+
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked} , // checked
+                },
+                new int[]{
+                        Color.parseColor("#ffffff"),
+                        Color.parseColor("##ffffff"),
+                }
+        );
+
+        CompoundButtonCompat.setButtonTintList(cb, colorStateList);
 
         View colorView = view.findViewById(R.id.color);
         colorView.setEnabled(hasMoreColors(position));

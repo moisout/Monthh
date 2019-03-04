@@ -31,11 +31,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.calendar.ColorChipView;
 import com.android.calendar.DynamicTheme;
 import com.android.calendar.Utils;
 
+import java.io.Console;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -164,6 +166,12 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         int color = Utils.getDisplayColorFromColor(cursor.getInt(AgendaWindowAdapter.INDEX_COLOR));
         cardBackground(holder.textContainer, color);
 
+        //view.setOnClickListener(button_click);
+
+        if(view.hasOnClickListeners()){
+            System.out.println("dsfafasdfdas");
+        }
+
         holder.colorChip.setColor(color);
 
         // What
@@ -248,6 +256,15 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         }
     }
 
+    View.OnClickListener button_click = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            System.out.println("test test test");
+        }
+    };
+
+
     public static void cardBackground(View v, int backgroundColor) {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
@@ -255,6 +272,7 @@ public class AgendaAdapter extends ResourceCursorAdapter {
         shape.setColor(backgroundColor);
         v.setBackground(shape);
     }
+
     static class ViewHolder {
 
         public static final int DECLINED_RESPONSE = 0;

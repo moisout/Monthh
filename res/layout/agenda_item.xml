@@ -14,13 +14,13 @@
      limitations under the License.
 -->
 
-<GridLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@android:id/content"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:minHeight="64dip"
+    android:layout_height="wrap_content"
     android:columnCount="3"
+    android:minHeight="64dip"
     android:rowCount="2">
 
     <com.android.calendar.ColorChipView
@@ -48,8 +48,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="@dimen/agenda_item_right_margin"
         android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/layout_bg">
+        android:background="@drawable/layout_bg"
+        android:clickable="false"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -84,15 +85,16 @@
             android:textSize="14sp" />
 
     </LinearLayout>
+
     <ImageView
         android:id="@+id/selected_marker"
-        android:layout_column="2"
-        android:layout_row="1"
-        android:layout_rowSpan="1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_row="1"
+        android:layout_rowSpan="1"
+        android:layout_column="2"
         android:layout_gravity="center_vertical"
-        android:visibility="gone"
+        android:background="@drawable/list_multi_left_activated_holo"
         android:contentDescription="@string/acessibility_selected_marker_description"
-        android:background="@drawable/list_multi_left_activated_holo" />
+        android:visibility="gone" />
 </GridLayout>

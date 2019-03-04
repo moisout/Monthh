@@ -35,6 +35,8 @@
         android:layout_gravity="center"
         android:text="@android:string/ok" />
 
-    <include android:id="@+id/calendar_list" layout="@android:layout/list_content"/>
+    <include
+        android:id="@+id/calendar_list"
+        layout="@android:layout/list_content" />
 
 </LinearLayout>
