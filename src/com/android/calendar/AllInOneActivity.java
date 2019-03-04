@@ -43,6 +43,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -72,6 +73,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -813,11 +817,13 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
 
     @Override
     public void onBackPressed() {
+        /*
         if (mCurrentView == ViewType.EDIT || mBackToPreviousView) {
             mController.sendEvent(this, EventType.GO_TO, null, null, -1, mPreviousView);
-        } else {
+        } else {*/
             super.onBackPressed();
-        }
+            overridePendingTransition(R.anim.open_up_in, R.anim.open_up_out);
+        /*}*/
     }
 
     @Override
@@ -943,21 +949,25 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
             case R.id.day_menu_item:
                 if (mCurrentView != ViewType.DAY) {
                     mController.sendEvent(this, EventType.GO_TO, null, null, -1, ViewType.DAY);
+                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
                 }
                 break;
             case R.id.week_menu_item:
                 if (mCurrentView != ViewType.WEEK) {
                     mController.sendEvent(this, EventType.GO_TO, null, null, -1, ViewType.WEEK);
+                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
                 }
                 break;
             case R.id.month_menu_item:
                 if (mCurrentView != ViewType.MONTH) {
                     mController.sendEvent(this, EventType.GO_TO, null, null, -1, ViewType.MONTH);
+                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
                 }
                 break;
             case R.id.agenda_menu_item:
                 if (mCurrentView != ViewType.AGENDA) {
                     mController.sendEvent(this, EventType.GO_TO, null, null, -1, ViewType.AGENDA);
+                    overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
                 }
                 break;
             case R.id.action_select_visible_calendars:
@@ -1346,6 +1356,7 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
                     intent.putExtra(EXTRA_EVENT_END_TIME, event.endTime.toMillis(false));
                     intent.putExtra(ATTENDEE_STATUS, response);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.open_up_in, R.anim.open_up_out);
                 } else {
                     // start event info as a dialog
                     EventInfoFragment fragment = new EventInfoFragment(this,

@@ -275,6 +275,7 @@ public class SearchActivity extends AppCompatActivity implements CalendarControl
             return false;
         } else if (itemId == R.id.action_settings) {
             mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
+            overridePendingTransition(R.anim.open_up_in, R.anim.open_up_out);
             return true;
         } else if (itemId == android.R.id.home) {
             Utils.returnToCalendarHome(this);

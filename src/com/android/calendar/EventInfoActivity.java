@@ -190,5 +190,12 @@ public class EventInfoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        overridePendingTransition(R.anim.open_up_in, R.anim.open_up_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.close_down_in, R.anim.close_down_out);
     }
 }

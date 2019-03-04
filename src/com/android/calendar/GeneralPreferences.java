@@ -367,6 +367,7 @@ public class GeneralPreferences extends PreferenceFragment implements
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
+
     }
 
     @Override
@@ -524,4 +525,5 @@ public class GeneralPreferences extends PreferenceFragment implements
         mHomeTZ.setSummary(timezoneName);
         Utils.setTimeZone(getActivity(), tzi.mTzId);
     }
+
 }
