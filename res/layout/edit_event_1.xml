@@ -20,6 +20,24 @@
     android:orientation="vertical">
 
     <!-- CALENDARS SELECTOR for new events -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/title"
+            style="@style/TextAppearance.EditEvent_Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dip"
+            android:focusable="true"
+            android:hint="@string/hint_what"
+            android:inputType="textAutoCorrect|textCapSentences"
+            android:minHeight="48dip"
+            android:singleLine="true"
+            android:theme="@android:style/Widget.Material.TextView" />
+    </android.support.design.widget.TextInputLayout>
+
     <LinearLayout
         android:id="@+id/calendar_selector_group"
         android:layout_width="match_parent"
@@ -54,6 +72,7 @@
     </LinearLayout>
 
     <!-- CALENDAR DISPLAY for existing events -->
+
     <LinearLayout
         android:id="@+id/calendar_group"
         android:layout_width="match_parent"
@@ -101,22 +120,6 @@
     </LinearLayout>
 
     <!-- WHAT -->
-    <android.support.design.widget.TextInputLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			>
-        <android.support.design.widget.TextInputEditText
-			android:id="@+id/title"
-			style="@style/TextAppearance.EditEvent_Value"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="4dip"
-			android:focusable="true"
-			android:hint="@string/hint_what"
-			android:inputType="textAutoCorrect|textCapSentences"
-			android:minHeight="48dip"
-			android:singleLine="true" />
-	</android.support.design.widget.TextInputLayout>
 
     <!-- WHERE -->
     <LinearLayout android:id="@+id/where_row"
