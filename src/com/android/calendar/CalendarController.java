@@ -636,7 +636,10 @@ public class CalendarController {
         final SearchableInfo searchableInfo = searchManager.getSearchableInfo(componentName);
         final Intent intent = new Intent(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, query);
-        intent.setComponent(searchableInfo.getSearchActivity());
+        if(searchableInfo != null){
+            intent.setComponent(searchableInfo.getSearchActivity());
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mContext.startActivity(intent);
     }
