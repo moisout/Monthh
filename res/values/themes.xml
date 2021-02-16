@@ -33,7 +33,16 @@
         <item name="calendar_date_banner_bgcolor">@color/calendar_date_banner_background_dark</item>
         <item name="app_bar_color">@color/app_bar_dark</item>
         <item name="minus_button">@drawable/ic_menu_remove_field_holo_light_dark</item>
-        <item name="ic_menu_email">@drawable/event_info_mail_button_dark</item>
+        <item name="ic_menu_email">@drawable/ic_menu_email_holo_dark</item>
+        <item name="calendar_future_bg_color">@color/calendar_future_bg_color_dark</item>
+        <item name="month_other_bgcolor">@color/month_other_bgcolor_dark</item>
+        <item name="settings_calendar_offline">@drawable/ic_sync_off_dark</item>
+        <item name="iconAboutAuthors">@android:color/white</item>
+        <item name="iconAboutLicense">@android:color/white</item>
+        <item name="iconSettingsAbout">@android:color/white</item>
+        <item name="iconSettingsGeneral">@android:color/white</item>
+        <item name="iconAddCalendar">@android:color/white</item>
+        <item name="iconCalendarAccount">@android:color/white</item>
     </style>
 
     <style name="CalendarAppThemeBlack" parent="Theme.AppCompat.NoActionBar">
@@ -57,6 +66,7 @@
         <item name="recurrence_picker_bgcolor">@color/recurrence_picker_background_black</item>
         <item name="done_text_recurrence">@color/recurrence_done_text_color_black</item>
         <item name="spinner_privacy_presence_bgcolor">@color/spinner_privacy_popupBackground_black</item>
+        <item name="event_info_bgcolor">@color/bg_black</item>
         <item name="event_info_scrollview_bgcolor">@color/bg_black</item>
         <item name="event_info_organizer_color">@color/event_info_organizer_color_black</item>
         <item name="event_info_description_color">@color/event_info_description_color_black</item>
@@ -67,6 +77,16 @@
         <item name="calendar_date_banner_bgcolor">@color/calendar_date_banner_background_black</item>
         <item name="app_bar_color">@color/app_bar_black</item>
         <item name="minus_button">@drawable/ic_menu_remove_field_holo_light_dark</item>
+        <item name="ic_menu_email">@drawable/ic_menu_email_holo_dark</item>
+        <item name="calendar_future_bg_color">@color/calendar_future_bg_color_black</item>
+        <item name="month_other_bgcolor">@color/month_other_bgcolor_black</item>
+        <item name="settings_calendar_offline">@drawable/ic_sync_off_dark</item>
+        <item name="iconAboutAuthors">@android:color/white</item>
+        <item name="iconAboutLicense">@android:color/white</item>
+        <item name="iconSettingsAbout">@android:color/white</item>
+        <item name="iconSettingsGeneral">@android:color/white</item>
+        <item name="iconAddCalendar">@android:color/white</item>
+        <item name="iconCalendarAccount">@android:color/white</item>
     </style>
 
 
@@ -125,7 +145,7 @@
         <item name="colorPrimary">@color/colorBluePrimary</item>
         <item name="colorPrimaryDark">@color/bg_black</item>
         <item name="colorAccent">@color/colorBlueAccent</item>
-        <item name="app_bar_color">@color/bg_black</item>
+        <item name="app_bar_color">@color/app_bar_black</item>
     </style>
 
     <style name="CalendarAppThemeLightGreen" parent="CalendarAppTheme">
@@ -144,7 +164,7 @@
         <item name="colorPrimary">@color/colorGreenPrimary</item>
         <item name="colorPrimaryDark">@color/bg_black</item>
         <item name="colorAccent">@color/colorGreenAccent</item>
-        <item name="app_bar_color">@color/bg_black</item>
+        <item name="app_bar_color">@color/app_bar_black</item>
     </style>
 
     <style name="CalendarAppThemeLightRed" parent="CalendarAppTheme">
@@ -163,7 +183,7 @@
         <item name="colorPrimary">@color/colorRedPrimary</item>
         <item name="colorPrimaryDark">@color/bg_black</item>
         <item name="colorAccent">@color/colorRedAccent</item>
-        <item name="app_bar_color">@color/bg_black</item>
+        <item name="app_bar_color">@color/app_bar_black</item>
     </style>
 
     <style name="CalendarAppThemeLightPurple" parent="CalendarAppTheme">
@@ -182,7 +202,7 @@
         <item name="colorPrimary">@color/colorPurplePrimary</item>
         <item name="colorPrimaryDark">@color/bg_black</item>
         <item name="colorAccent">@color/colorPurpleAccent</item>
-        <item name="app_bar_color">@color/bg_black</item>
+        <item name="app_bar_color">@color/app_bar_black</item>
     </style>
 
 

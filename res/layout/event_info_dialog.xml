@@ -36,9 +36,13 @@
             android:layout_marginTop="16dip"
             android:text="@string/loading" />
     </RelativeLayout>
-
+    <TextView
+            android:id="@+id/event_info_error_msg"
+            android:text="@string/event_not_found"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/event_info_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -101,7 +105,7 @@
                             android:enabled="false"
                             android:padding="8dip"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_menu_colorpicker_dialog"
+                            android:src="@drawable/ic_colorpicker"
                             android:visibility="gone" />
                         <ImageButton
                             android:id="@+id/edit"
@@ -113,7 +117,7 @@
                             android:enabled="false"
                             android:padding="8dip"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_menu_compose_dialog"
+                            android:src="@drawable/ic_edit_event"
                             android:visibility="gone" />
                         <ImageButton
                             android:id="@+id/delete"
@@ -124,7 +128,7 @@
                             android:enabled="false"
                             android:padding="8dip"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_menu_trash_dialog"
+                            android:src="@drawable/ic_delete_event"
                             android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
@@ -404,7 +408,7 @@
                     android:id="@+id/reminder_items_container"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginStart="-8dp"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:orientation="vertical" />
                 <Button

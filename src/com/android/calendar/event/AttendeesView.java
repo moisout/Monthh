@@ -54,7 +54,7 @@ package com.android.calendar.event;
  import java.util.HashMap;
  import java.util.LinkedHashSet;
 
- import com.maurice.monthh.R;
+ import ws.xsoh.etar.R;
 
 public class AttendeesView extends LinearLayout implements View.OnClickListener {
     private static final String TAG = "AttendeesView";

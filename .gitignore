@@ -12,9 +12,6 @@
 bin/
 gen/
 
-# Cache files
-.idea/
-
 # Gradle files
 .gradle/
 build/

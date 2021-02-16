@@ -43,7 +43,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 /**
  * <p>
@@ -169,10 +169,9 @@ public class SimpleDayPickerFragment extends ListFragment implements OnScrollLis
         mTempTime.timezone = tz;
 
         Context c = getActivity();
-        DynamicTheme theme = new DynamicTheme();
-        mSaturdayColor = theme.getColor(c, "month_saturday");
-        mSundayColor = theme.getColor(c, "month_sunday");
-        mDayNameColor = theme.getColor(c, "month_day_names_color");
+        mSaturdayColor = DynamicTheme.getColor(c, "month_saturday");
+        mSundayColor = DynamicTheme.getColor(c, "month_sunday");
+        mDayNameColor = DynamicTheme.getColor(c, "month_day_names_color");
 
         // Adjust sizes for screen density
         if (mScale == 0) {

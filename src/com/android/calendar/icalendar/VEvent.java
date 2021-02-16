@@ -88,7 +88,7 @@ public class VEvent {
         mAttendees = new LinkedList<Attendee>();
 
         // Generate and add a unique identifier to this event - iCal requisite
-        addProperty(UID , UUID.randomUUID().toString() + "@com.maurice.monthh");
+        addProperty(UID , UUID.randomUUID().toString() + "@ws.xsoh.etar");
         addTimeStamp();
     }
 
@@ -200,7 +200,7 @@ public class VEvent {
             String line = iter.next();
             if (line.contains("BEGIN:VEVENT")) {
                 // Continue
-            } else if (line.startsWith("END:EVENT")) {
+            } else if (line.startsWith("END:VEVENT")) {
                 break;
             } else if (line.startsWith("ORGANIZER")) {
                 String entry = parseTillNextAttribute(iter, line);

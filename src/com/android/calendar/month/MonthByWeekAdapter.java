@@ -39,7 +39,7 @@ import com.android.calendar.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     public static final String WEEK_PARAMS_IS_MINI = "mini_month";
@@ -305,7 +305,11 @@ public class MonthByWeekAdapter extends SimpleWeeksAdapter {
     @Override
     protected void refresh() {
         mFirstDayOfWeek = Utils.getFirstDayOfWeek(mContext);
-        mShowWeekNumber = Utils.getShowWeekNumber(mContext);
+        if (mIsMiniMonth) {
+            mShowWeekNumber = false;
+        } else {
+            mShowWeekNumber = Utils.getShowWeekNumber(mContext);
+        }
         mHomeTimeZone = Utils.getTimeZone(mContext, null);
         mOrientation = mContext.getResources().getConfiguration().orientation;
         updateTimeZones();

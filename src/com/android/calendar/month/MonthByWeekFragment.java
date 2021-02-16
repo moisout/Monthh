@@ -58,7 +58,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         CalendarController.EventHandler, LoaderManager.LoaderCallbacks<Cursor>, OnScrollListener,
@@ -262,7 +262,11 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
     @Override
     protected void setUpAdapter() {
         mFirstDayOfWeek = Utils.getFirstDayOfWeek(mContext);
-        mShowWeekNumber = Utils.getShowWeekNumber(mContext);
+        if (mIsMiniMonth) {
+            mShowWeekNumber = false;
+        } else {
+            mShowWeekNumber = Utils.getShowWeekNumber(mContext);
+        }
 
         HashMap<String, Integer> weekParams = new HashMap<String, Integer>();
         weekParams.put(SimpleWeeksAdapter.WEEK_PARAMS_NUM_WEEKS, mNumWeeks);
@@ -301,7 +305,7 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
         mListView.setOnTouchListener(this);
 
         if (!mIsMiniMonth) {
-            mListView.setBackgroundColor(new DynamicTheme().getColor(getActivity(), "month_bgcolor"));
+            mListView.setBackgroundColor(DynamicTheme.getColor(getActivity(), "month_bgcolor"));
         }
 
         // To get a smoother transition when showing this fragment, delay loading of events until
@@ -356,7 +360,11 @@ public class MonthByWeekFragment extends SimpleDayPickerFragment implements
     @Override
     public void doResumeUpdates() {
         mFirstDayOfWeek = Utils.getFirstDayOfWeek(mContext);
-        mShowWeekNumber = Utils.getShowWeekNumber(mContext);
+        if (mIsMiniMonth) {
+            mShowWeekNumber = false;
+        } else {
+            mShowWeekNumber = Utils.getShowWeekNumber(mContext);
+        }
         boolean prevHideDeclined = mHideDeclined;
         mHideDeclined = Utils.getHideDeclinedEvents(mContext);
         if (prevHideDeclined != mHideDeclined && mLoader != null) {

@@ -45,7 +45,8 @@ import com.android.calendar.alerts.GlobalDismissManager.AlarmId;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
+import ws.xsoh.etar.databinding.AlertActivityBinding;
 
 /**
  * The alert panel that pops up when there is a calendar event alarm.
@@ -174,18 +175,19 @@ public class AlertActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        setContentView(R.layout.alert_activity);
+        AlertActivityBinding binding = AlertActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setTitle(R.string.alert_title);
 
         mQueryHandler = new QueryHandler(this);
         mAdapter = new AlertAdapter(this, R.layout.alert_item);
 
-        mListView = (ListView) findViewById(R.id.alert_container);
+        mListView = binding.alertContainer;
         mListView.setItemsCanFocus(true);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(mViewListener);
 
-        mDismissAllButton = (Button) findViewById(R.id.dismiss_all);
+        mDismissAllButton = binding.dismissAll;
         mDismissAllButton.setOnClickListener(this);
 
         // Disable the buttons, since they need mCursor, which is created asynchronously
@@ -219,7 +221,15 @@ public class AlertActivity extends Activity implements OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
-        AlertService.updateAlertNotification(this);
+        // Can't run updateAlertNotification in main thread
+        AsyncTask task = new AsyncTask<Context, Void, Void>() {
+            @Override
+            protected Void doInBackground(Context ... params) {
+                AlertService.updateAlertNotification(params[0]);
+                return null;
+            }
+        }.execute(this);
+
 
         if (mCursor != null) {
             mCursor.deactivate();
@@ -245,7 +255,6 @@ public class AlertActivity extends Activity implements OnClickListener {
 
             finish();
         }
-
     }
 
     public boolean isEmpty() {

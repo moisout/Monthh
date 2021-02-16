@@ -15,7 +15,6 @@
  */
 package com.android.calendar;
 
-import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
@@ -30,9 +29,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract.Events;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
@@ -43,7 +43,8 @@ import com.android.calendar.CalendarController.EventType;
 import com.android.calendar.CalendarController.ViewType;
 import com.android.calendar.agenda.AgendaFragment;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
+import ws.xsoh.etar.databinding.SimpleFrameLayoutMaterialBinding;
 
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
@@ -104,7 +105,9 @@ public class SearchActivity extends AppCompatActivity implements CalendarControl
         mShowEventDetailsWithAgenda =
             Utils.getConfigBool(this, R.bool.show_event_details_with_agenda);
 
-        setContentView(R.layout.search);
+        SimpleFrameLayoutMaterialBinding binding = SimpleFrameLayoutMaterialBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.include.toolbar);
 
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
@@ -149,9 +152,6 @@ public class SearchActivity extends AppCompatActivity implements CalendarControl
             } else {
                 query = intent.getStringExtra(SearchManager.QUERY);
             }
-            if ("TARDIS".equalsIgnoreCase(query)) {
-                Utils.tardis();
-            }
             initFragments(millis, query);
         }
     }
@@ -168,8 +168,8 @@ public class SearchActivity extends AppCompatActivity implements CalendarControl
         FragmentTransaction ft = fragmentManager.beginTransaction();
 
         AgendaFragment searchResultsFragment = new AgendaFragment(timeMillis, true);
-        ft.replace(R.id.search_results, searchResultsFragment);
-        mController.registerEventHandler(R.id.search_results, searchResultsFragment);
+        ft.replace(R.id.body_frame, searchResultsFragment);
+        mController.registerEventHandler(R.id.body_frame, searchResultsFragment);
 
         ft.commit();
         Time t = new Time();
@@ -275,7 +275,6 @@ public class SearchActivity extends AppCompatActivity implements CalendarControl
             return false;
         } else if (itemId == R.id.action_settings) {
             mController.sendEvent(this, EventType.LAUNCH_SETTINGS, null, null, 0, 0);
-            overridePendingTransition(R.anim.open_up_in, R.anim.open_up_out);
             return true;
         } else if (itemId == android.R.id.home) {
             Utils.returnToCalendarHome(this);

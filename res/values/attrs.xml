@@ -15,9 +15,6 @@
 -->
 
 <resources>
-    <!-- MultiStateButton doesn't define any special attributes -->
-    <declare-styleable name="com.android.calendar.MultiStateButton">
-    </declare-styleable>
     <declare-styleable name="CustomWidget">
         <attr name="light_dark" format="color"/>
         <attr name="settings_titleText" format="reference|color" />
@@ -42,5 +39,14 @@
         <attr name="app_bar_color" format="color"/>
         <attr name="minus_button" format="reference"/>
         <attr name="ic_menu_email" format="reference"/>
+        <attr name="calendar_future_bg_color" format="color"/>
+        <attr name="month_other_bgcolor" format="color"/>
+        <attr name="settings_calendar_offline" format="reference"/>
+        <attr name="iconAboutAuthors" format="reference"/>
+        <attr name="iconAboutLicense" format="reference"/>
+        <attr name="iconSettingsAbout" format="reference" />
+        <attr name="iconSettingsGeneral" format="reference" />
+        <attr name="iconAddCalendar" format="reference" />
+        <attr name="iconCalendarAccount" format="reference" />
     </declare-styleable>
 </resources>

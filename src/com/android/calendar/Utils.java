@@ -20,6 +20,7 @@ import android.accounts.Account;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +38,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract.Calendars;
-import android.support.v7.widget.SearchView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -52,10 +55,13 @@ import android.util.Log;
 import com.android.calendar.CalendarController.ViewType;
 import com.android.calendar.CalendarEventModel.ReminderEntry;
 import com.android.calendar.CalendarUtils.TimeZoneUtils;
+import com.android.calendar.settings.GeneralPreferences;
+import com.android.calendar.widget.CalendarAppWidgetProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,7 +75,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.BuildConfig;
+import ws.xsoh.etar.R;
 
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 
@@ -109,7 +116,7 @@ public class Utils {
     // historical
     // reasons, as it's what PreferenceManager assigned the first time the file
     // was created.
-    static final String SHARED_PREFS_NAME = "com.android.calendar_preferences";
+    public static final String SHARED_PREFS_NAME = "com.android.calendar_preferences";
     static final String MACHINE_GENERATED_ADDRESS = "calendar.google.com";
     private static final boolean DEBUG = false;
     private static final String TAG = "CalUtils";
@@ -184,7 +191,6 @@ public class Utils {
     static int CONFLICT_COLOR = 0xFF000000;
     static boolean mMinutesLoaded = false;
     private static boolean mAllowWeekForDetailView = false;
-    private static long mTardis = 0;
     private static String sVersion = null;
 
     /**
@@ -197,7 +203,7 @@ public class Utils {
     public static int getViewTypeFromIntentAndSharedPref(Activity activity) {
         Intent intent = activity.getIntent();
         Bundle extras = intent.getExtras();
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(activity);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(activity);
 
         if (TextUtils.equals(intent.getAction(), Intent.ACTION_EDIT)) {
             return ViewType.EDIT;
@@ -239,12 +245,20 @@ public class Utils {
     public static String getWidgetScheduledUpdateAction(Context context) {
         return "com.android.calendar.APPWIDGET_SCHEDULED_UPDATE";
     }
+    /**
+     * Send Broadcast to update widget.
+     */
+    public static void sendUpdateWidgetIntent(Context context) {
+        Intent updateIntent = new Intent(Utils.getWidgetUpdateAction(context));
+        updateIntent.setClass(context, CalendarAppWidgetProvider.class);
+        context.sendBroadcast(updateIntent);
+    }
 
     /**
      * Gets the intent action for telling the widget to update.
      */
     public static String getSearchAuthority(Context context) {
-        return "com.android.calendar.CalendarRecentSuggestionsProvider";
+        return BuildConfig.APPLICATION_ID + ".CalendarRecentSuggestionsProvider";
     }
 
     /**
@@ -302,27 +316,27 @@ public class Utils {
     }
 
     public static String[] getSharedPreference(Context context, String key, String[] defaultValue) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         Set<String> ss = prefs.getStringSet(key, null);
         if (ss != null) {
-            String strings[] = new String[ss.size()];
+            String[] strings = new String[ss.size()];
             return ss.toArray(strings);
         }
         return defaultValue;
     }
 
     public static String getSharedPreference(Context context, String key, String defaultValue) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return prefs.getString(key, defaultValue);
     }
 
     public static int getSharedPreference(Context context, String key, int defaultValue) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return prefs.getInt(key, defaultValue);
     }
 
     public static boolean getSharedPreference(Context context, String key, boolean defaultValue) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return prefs.getBoolean(key, defaultValue);
     }
 
@@ -334,36 +348,26 @@ public class Utils {
      * @param value the value to set
      */
     public static void setSharedPreference(Context context, String key, String value) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         prefs.edit().putString(key, value).apply();
     }
 
     public static void setSharedPreference(Context context, String key, String[] values) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         LinkedHashSet<String> set = new LinkedHashSet<String>();
-        for (String value : values) {
-            set.add(value);
-        }
+        Collections.addAll(set, values);
         prefs.edit().putStringSet(key, set).apply();
     }
 
-    protected static void tardis() {
-        mTardis = System.currentTimeMillis();
-    }
-
-    protected static long getTardis() {
-        return mTardis;
-    }
-
     public static void setSharedPreference(Context context, String key, boolean value) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
     static void setSharedPreference(Context context, String key, int value) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(key, value);
         editor.apply();
@@ -384,7 +388,7 @@ public class Utils {
     // At backup manager "restore" time (which should happen before launcher
     // comes up for the first time), the value will be set/reset to default
     // ringtone.
-    public static String getRingTonePreference(Context context) {
+    public static String getRingtonePreference(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(
                 GeneralPreferences.SHARED_PREFS_NAME_NO_BACKUP, Context.MODE_PRIVATE);
         String ringtone = prefs.getString(GeneralPreferences.KEY_ALERTS_RINGTONE, null);
@@ -398,13 +402,13 @@ public class Utils {
                     GeneralPreferences.DEFAULT_RINGTONE);
 
             // Write it to the new place
-            setRingTonePreference(context, ringtone);
+            setRingtonePreference(context, ringtone);
         }
 
         return ringtone;
     }
 
-    public static void setRingTonePreference(Context context, String value) {
+    public static void setRingtonePreference(Context context, String value) {
         SharedPreferences prefs = context.getSharedPreferences(
                 GeneralPreferences.SHARED_PREFS_NAME_NO_BACKUP, Context.MODE_PRIVATE);
         prefs.edit().putString(GeneralPreferences.KEY_ALERTS_RINGTONE, value).apply();
@@ -417,7 +421,7 @@ public class Utils {
      * @param viewId {@link CalendarController.ViewType}
      */
     static void setDefaultView(Context context, int viewId) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
 
         boolean validDetailView = false;
@@ -449,7 +453,7 @@ public class Utils {
         }
         MatrixCursor newCursor = new MatrixCursor(columnNames);
         int numColumns = cursor.getColumnCount();
-        String data[] = new String[numColumns];
+        String[] data = new String[numColumns];
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
             for (int i = 0; i < numColumns; i++) {
@@ -598,7 +602,7 @@ public class Utils {
      * @return the first day of week in android.text.format.Time
      */
     public static int getFirstDayOfWeek(Context context) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         String pref = prefs.getString(
                 GeneralPreferences.KEY_WEEK_START_DAY, GeneralPreferences.WEEK_START_DEFAULT);
 
@@ -624,7 +628,7 @@ public class Utils {
      * @return the default event length, in milliseconds
      */
     public static long getDefaultEventDurationInMillis(Context context) {
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         String pref = prefs.getString(GeneralPreferences.KEY_DEFAULT_EVENT_DURATION,
                 GeneralPreferences.EVENT_DURATION_DEFAULT);
         final int defaultDurationInMins = Integer.parseInt(pref);
@@ -669,7 +673,7 @@ public class Utils {
      * @return true when week number should be shown.
      */
     public static boolean getShowWeekNumber(Context context) {
-        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        final SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return prefs.getBoolean(
                 GeneralPreferences.KEY_SHOW_WEEK_NUM, GeneralPreferences.DEFAULT_SHOW_WEEK_NUM);
     }
@@ -678,27 +682,27 @@ public class Utils {
      * @return true when declined events should be hidden.
      */
     public static boolean getHideDeclinedEvents(Context context) {
-        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        final SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return prefs.getBoolean(GeneralPreferences.KEY_HIDE_DECLINED, false);
     }
 
     public static int getDaysPerWeek(Context context) {
-        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        final SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return Integer.valueOf(prefs.getString(GeneralPreferences.KEY_DAYS_PER_WEEK, "7"));
     }
 
     public static int getMDaysPerWeek(Context context) {
-        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        final SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return Integer.valueOf(prefs.getString(GeneralPreferences.KEY_MDAYS_PER_WEEK, "7"));
     }
 
     public static boolean useCustomSnoozeDelay(Context context) {
-        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        final SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         return prefs.getBoolean(GeneralPreferences.KEY_USE_CUSTOM_SNOOZE_DELAY, false);
     }
 
     public static long getDefaultSnoozeDelayMs(Context context) {
-        final SharedPreferences prefs = GeneralPreferences.getSharedPreferences(context);
+        final SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(context);
         final String value = prefs.getString(GeneralPreferences.KEY_DEFAULT_SNOOZE_DELAY, null);
         final long intValue = value != null
                 ? Long.valueOf(value)
@@ -850,6 +854,28 @@ public class Utils {
         int g = (((color & 0x0000ff00) * a) + ((bg & 0x0000ff00) * (0xff - a))) & 0x00ff0000;
         int b = (((color & 0x000000ff) * a) + ((bg & 0x000000ff) * (0xff - a))) & 0x0000ff00;
         return (0xff000000) | ((r | g | b) >> 8);
+    }
+
+    public static void trySyncAndDisableUpgradeReceiver(Context context) {
+        final PackageManager pm = context.getPackageManager();
+        ComponentName upgradeComponent = new ComponentName(context, UpgradeReceiver.class);
+        if (pm.getComponentEnabledSetting(upgradeComponent) ==
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            // The upgrade receiver has been disabled, which means this code has been run before,
+            // so no need to sync.
+            return;
+        }
+
+        Bundle extras = new Bundle();
+        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(
+                null /* no account */,
+                Calendars.CONTENT_URI.getAuthority(),
+                extras);
+
+        // Now unregister the receiver so that we won't continue to sync every time.
+        pm.setComponentEnabledSetting(upgradeComponent,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
     /**
@@ -1642,6 +1668,7 @@ public class Utils {
      * @param context
      * @return a list of quick responses.
      */
+    @NonNull
     public static String[] getQuickResponses(Context context) {
         String[] s = Utils.getSharedPreference(context, KEY_QUICK_RESPONSES, (String[]) null);
 

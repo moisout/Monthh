@@ -35,7 +35,7 @@ import com.android.colorpicker.HsvColorComparator;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class CalendarColorPickerDialog extends ColorPickerDialog {
 
@@ -84,6 +84,10 @@ public class CalendarColorPickerDialog extends ColorPickerDialog {
     }
 
     private void saveColorKeys(Bundle outState) {
+        // No color keys to save, so just return
+        if (mColors == null) {
+            return;
+        }
         int[] colorKeys = new int[mColors.length];
         for (int i = 0; i < mColors.length; i++) {
             colorKeys[i] = mColorKeyMap.get(mColors[i]);

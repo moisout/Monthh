@@ -33,7 +33,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 import com.android.calendar.CalendarController.EventInfo;
 import com.android.calendar.CalendarController.EventType;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 /**
  * This is the base class for Day and Week Activities.

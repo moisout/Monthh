@@ -17,6 +17,7 @@
 package com.android.calendar.recurrencepicker;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -43,27 +44,29 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.appcompat.widget.SwitchCompat;
+
 import com.android.calendar.Utils;
 import com.android.calendarcommon2.EventRecurrence;
-import com.android.datetimepicker.date.DatePickerDialog;
+
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class RecurrencePickerDialog extends DialogFragment implements OnItemSelectedListener,
         OnCheckedChangeListener, OnClickListener,
@@ -89,7 +92,11 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
     };
     private static final String BUNDLE_MODEL = "bundle_model";
     private static final String BUNDLE_END_COUNT_HAS_FOCUS = "bundle_end_count_has_focus";
-    private static final String FRAG_TAG_DATE_PICKER = "tag_date_picker_frag";
+
+    // Special cases in monthlyByNthDayOfWeek
+    private static final int FIFTH_WEEK_IN_A_MONTH = 5;
+    private static final int LAST_NTH_DAY_OF_WEEK = -1;
+
     private final int[] TIME_DAY_TO_CALENDAR_DAY = new int[] {
             Calendar.SUNDAY,
             Calendar.MONDAY,
@@ -112,7 +119,7 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
     private Toast mToast;
     private View mView;
     private Spinner mFreqSpinner;
-    private Switch mRepeatSwitch;
+    private SwitchCompat mRepeatSwitch;
     private EditText mInterval;
     private TextView mIntervalPreText;
     private TextView mIntervalPostText;
@@ -147,6 +154,12 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
     public RecurrencePickerDialog() {
     }
 
+    static public boolean isSupportedMonthlyByNthDayOfWeek(int num) {
+        // We only support monthlyByNthDayOfWeek when it is greater then 0 but less then 5.
+        // Or if -1 when it is the last monthly day of the week.
+        return (num > 0 && num <= FIFTH_WEEK_IN_A_MONTH) || num == LAST_NTH_DAY_OF_WEEK;
+    }
+
     static public boolean canHandleRecurrenceRule(EventRecurrence er) {
         switch (er.freq) {
             case EventRecurrence.DAILY:
@@ -172,7 +185,7 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
          */
         int numOfByDayNum = 0;
         for (int i = 0; i < er.bydayCount; i++) {
-            if (er.bydayNum[i] > 0) {
+            if (isSupportedMonthlyByNthDayOfWeek(er.bydayNum[i])) {
                 ++numOfByDayNum;
             }
         }
@@ -265,8 +278,9 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
                 int dayOfWeek = EventRecurrence.day2TimeDay(er.byday[i]);
                 model.weeklyByDayOfWeek[dayOfWeek] = true;
 
-                if (model.freq == RecurrenceModel.FREQ_MONTHLY && er.bydayNum[i] > 0) {
-                    // LIMITATION: Can handle only (one) weekDayNum and only
+                if (model.freq == RecurrenceModel.FREQ_MONTHLY &&
+                        isSupportedMonthlyByNthDayOfWeek(er.bydayNum[i])) {
+                    // LIMITATION: Can handle only (one) weekDayNum in nth or last and only
                     // when
                     // monthly
                     model.monthlyByDayOfWeek = dayOfWeek;
@@ -360,7 +374,7 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
                         er.bymonthdayCount = 1;
                     }
                 } else if (model.monthlyRepeat == RecurrenceModel.MONTHLY_BY_NTH_DAY_OF_WEEK) {
-                    if (model.monthlyByNthDayOfWeek <= 0) {
+                    if (!isSupportedMonthlyByNthDayOfWeek(model.monthlyByNthDayOfWeek)) {
                         throw new IllegalStateException("month repeat by nth week but n is "
                                 + model.monthlyByNthDayOfWeek);
                     }
@@ -452,7 +466,7 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
         final Activity activity = getActivity();
         final Configuration config = activity.getResources().getConfiguration();
 
-        mRepeatSwitch = (Switch) mView.findViewById(R.id.repeat_switch);
+        mRepeatSwitch = mView.findViewById(R.id.repeat_switch);
         mRepeatSwitch.setChecked(mModel.recurrenceState == RecurrenceModel.STATE_RECURRENCE);
         mRepeatSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -737,13 +751,22 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
                 if (mMonthRepeatByDayOfWeekStr == null) {
                     if (mModel.monthlyByNthDayOfWeek == 0) {
                         mModel.monthlyByNthDayOfWeek = (mTime.monthDay + 6) / 7;
+                        // Since not all months have 5 weeks, we convert 5th NthDayOfWeek to
+                        // -1 for last monthly day of the week
+                        if (mModel.monthlyByNthDayOfWeek >= FIFTH_WEEK_IN_A_MONTH) {
+                            mModel.monthlyByNthDayOfWeek = LAST_NTH_DAY_OF_WEEK;
+                        }
                         mModel.monthlyByDayOfWeek = mTime.weekDay;
                     }
 
                     String[] monthlyByNthDayOfWeekStrs =
                             mMonthRepeatByDayOfWeekStrs[mModel.monthlyByDayOfWeek];
+
+                    // TODO(psliwowski): Find a better way handle -1 indexes
+                    int msgIndex = mModel.monthlyByNthDayOfWeek < 0 ? FIFTH_WEEK_IN_A_MONTH :
+                            mModel.monthlyByNthDayOfWeek;
                     mMonthRepeatByDayOfWeekStr =
-                            monthlyByNthDayOfWeekStrs[mModel.monthlyByNthDayOfWeek - 1];
+                            monthlyByNthDayOfWeekStrs[msgIndex - 1];
                     mRepeatMonthlyByNthDayOfWeek.setText(mMonthRepeatByDayOfWeekStr);
                 }
                 break;
@@ -882,7 +905,7 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
     }
 
     @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         if (mModel.endDate == null) {
             mModel.endDate = new Time(mTime.timezone);
             mModel.endDate.hour = mModel.endDate.minute = mModel.endDate.second = 0;
@@ -929,11 +952,9 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
             if (mDatePickerDialog != null) {
                 mDatePickerDialog.dismiss();
             }
-            mDatePickerDialog = DatePickerDialog.newInstance(this, mModel.endDate.year,
-                    mModel.endDate.month, mModel.endDate.monthDay);
-            mDatePickerDialog.setFirstDayOfWeek(Utils.getFirstDayOfWeekAsCalendar(getActivity()));
-            mDatePickerDialog.setYearRange(Utils.YEAR_MIN, Utils.YEAR_MAX);
-            mDatePickerDialog.show(getFragmentManager(), FRAG_TAG_DATE_PICKER);
+            mDatePickerDialog = new DatePickerDialog(getActivity(), this,
+                    mModel.endDate.year, mModel.endDate.month, mModel.endDate.monthDay);
+            mDatePickerDialog.show();
         } else if (mDone == v) {
             String rrule;
             if (mModel.recurrenceState == RecurrenceModel.STATE_NO_RECURRENCE) {
@@ -950,11 +971,6 @@ public class RecurrencePickerDialog extends DialogFragment implements OnItemSele
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDatePickerDialog = (DatePickerDialog) getFragmentManager()
-                .findFragmentByTag(FRAG_TAG_DATE_PICKER);
-        if (mDatePickerDialog != null) {
-            mDatePickerDialog.setOnDateSetListener(this);
-        }
     }
 
     public void setOnRecurrenceSetListener(OnRecurrenceSetListener l) {

@@ -25,7 +25,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class ExpandableTextView extends LinearLayout implements OnClickListener {
 
@@ -55,8 +55,8 @@ public class ExpandableTextView extends LinearLayout implements OnClickListener 
 
     void init() {
         mMaxCollapsedLines = getResources().getInteger((R.integer.event_info_desc_line_num));
-        mExpandDrawable = getResources().getDrawable(R.drawable.ic_expand_small_holo_light);
-        mCollapseDrawable = getResources().getDrawable(R.drawable.ic_collapse_small_holo_light);
+        mExpandDrawable = getResources().getDrawable(R.drawable.ic_expand_small);
+        mCollapseDrawable = getResources().getDrawable(R.drawable.ic_collapse_small);
     }
 
     @Override

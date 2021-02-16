@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.android.common.contacts.BaseEmailAddressAdapter;
 import com.android.ex.chips.AccountSpecifier;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 /**
 * An adaptation of {@link BaseEmailAddressAdapter} for the Email app. The main

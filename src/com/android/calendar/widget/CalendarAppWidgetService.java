@@ -29,12 +29,14 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
+import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Instances;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -42,6 +44,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.android.calendar.DynamicTheme;
 import com.android.calendar.Utils;
 import com.android.calendar.widget.CalendarAppWidgetModel.DayInfo;
 import com.android.calendar.widget.CalendarAppWidgetModel.EventInfo;
@@ -51,7 +54,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 
 public class CalendarAppWidgetService extends RemoteViewsService {
@@ -246,9 +249,8 @@ public class CalendarAppWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getLoadingView() {
-            RemoteViews views = new RemoteViews(mContext.getPackageName(),
+            return new RemoteViews(mContext.getPackageName(),
                     R.layout.appwidget_loading);
-            return views;
         }
 
         @Override
@@ -296,11 +298,11 @@ public class CalendarAppWidgetService extends RemoteViewsService {
 
                 final long now = System.currentTimeMillis();
                 if (!eventInfo.allDay && eventInfo.start <= now && now <= eventInfo.end) {
-                    views.setInt(R.id.widget_row, "setBackgroundResource",
-                            R.drawable.agenda_item_bg_secondary);
+                    int past_bg_color = R.color.agenda_past_days_bar_background_color;
+                    views.setInt(R.id.widget_row, "setBackgroundResource", past_bg_color);
                 } else {
-                    views.setInt(R.id.widget_row, "setBackgroundResource",
-                            R.drawable.agenda_item_bg_primary);
+                    int future_bg_color = DynamicTheme.getWidgetBackgroundStyle(mContext);
+                    views.setInt(R.id.widget_row, "setBackgroundResource", future_bg_color);
                 }
 
                 if (!eventInfo.allDay) {
@@ -333,25 +335,31 @@ public class CalendarAppWidgetService extends RemoteViewsService {
                     views.setInt(R.id.title, "setTextColor", mDeclinedColor);
                     views.setInt(R.id.when, "setTextColor", mDeclinedColor);
                     views.setInt(R.id.where, "setTextColor", mDeclinedColor);
-                    // views.setInt(R.id.agenda_item_color, "setDrawStyle",
-                    // ColorChipView.DRAW_CROSS_HATCHED);
+
                     views.setInt(R.id.agenda_item_color, "setImageResource",
                             R.drawable.widget_chip_responded_bg);
                     // 40% opacity
                     views.setInt(R.id.agenda_item_color, "setColorFilter",
                             Utils.getDeclinedColorFromColor(displayColor));
                 } else {
-                    views.setInt(R.id.title, "setTextColor", mStandardColor);
-                    views.setInt(R.id.when, "setTextColor", mStandardColor);
-                    views.setInt(R.id.where, "setTextColor", mStandardColor);
                     if (selfAttendeeStatus == Attendees.ATTENDEE_STATUS_INVITED) {
                         views.setInt(R.id.agenda_item_color, "setImageResource",
                                 R.drawable.widget_chip_not_responded_bg);
+                        views.setInt(R.id.title, "setTextColor", displayColor);
+                        views.setInt(R.id.when, "setTextColor", displayColor);
+                        views.setInt(R.id.where, "setTextColor", displayColor);
                     } else {
                         views.setInt(R.id.agenda_item_color, "setImageResource",
                                 R.drawable.widget_chip_responded_bg);
+                        views.setInt(R.id.title, "setTextColor", mStandardColor);
+                        views.setInt(R.id.when, "setTextColor", mStandardColor);
+                        views.setInt(R.id.where, "setTextColor", mStandardColor);
                     }
                     views.setInt(R.id.agenda_item_color, "setColorFilter", displayColor);
+                }
+
+                if (eventInfo.status == Events.STATUS_CANCELED) {
+                    views.setInt(R.id.title, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG);
                 }
 
                 long start = eventInfo.start;
@@ -452,8 +460,7 @@ public class CalendarAppWidgetService extends RemoteViewsService {
             long begin = now - DateUtils.DAY_IN_MILLIS;
             long end = now + SEARCH_DURATION + DateUtils.DAY_IN_MILLIS;
 
-            Uri uri = Uri.withAppendedPath(Instances.CONTENT_URI, Long.toString(begin) + "/" + end);
-            return uri;
+            return Uri.withAppendedPath(Instances.CONTENT_URI, Long.toString(begin) + "/" + end);
         }
 
         /**
@@ -547,22 +554,23 @@ public class CalendarAppWidgetService extends RemoteViewsService {
                     time2.set(sLastUpdateTime);
                     time2.normalize(true);
                     if (time.year != time2.year || time.yearDay != time2.yearDay) {
-                        final Intent updateIntent = new Intent(
-                                Utils.getWidgetUpdateAction(mContext));
-                        mContext.sendBroadcast(updateIntent);
+                        Utils.sendUpdateWidgetIntent(mContext);
                     }
 
                     sLastUpdateTime = time.toMillis(true);
                 }
 
-                AppWidgetManager widgetManager = AppWidgetManager.getInstance(mContext);
-                if (mAppWidgetId == -1) {
-                    int[] ids = widgetManager.getAppWidgetIds(CalendarAppWidgetProvider
-                            .getComponentName(mContext));
+                if (CalendarAppWidgetProvider.isWidgetSupported(mContext)) {
+                    AppWidgetManager widgetManager = AppWidgetManager.getInstance(mContext);
+                    if (mAppWidgetId == -1) {
+                        int[] ids = widgetManager.getAppWidgetIds(CalendarAppWidgetProvider
+                                .getComponentName(mContext));
 
-                    widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.events_list);
-                } else {
-                    widgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.events_list);
+                        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.events_list);
+                    } else {
+                        widgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId,
+                                R.id.events_list);
+                    }
                 }
             }
         }

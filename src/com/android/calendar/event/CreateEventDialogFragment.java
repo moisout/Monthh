@@ -43,10 +43,10 @@ import com.android.calendar.AsyncQueryService;
 import com.android.calendar.CalendarController;
 import com.android.calendar.CalendarController.EventType;
 import com.android.calendar.CalendarEventModel;
-import com.android.calendar.GeneralPreferences;
 import com.android.calendar.Utils;
+import com.android.calendar.settings.GeneralPreferences;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 
 /**

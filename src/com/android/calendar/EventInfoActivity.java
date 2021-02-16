@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,7 +34,7 @@ import com.android.calendar.CalendarEventModel.ReminderEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 import static android.provider.CalendarContract.Attendees.ATTENDEE_STATUS;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
@@ -190,12 +190,5 @@ public class EventInfoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        overridePendingTransition(R.anim.open_up_in, R.anim.open_up_out);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.close_down_in, R.anim.close_down_out);
     }
 }

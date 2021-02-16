@@ -25,7 +25,7 @@ import android.widget.TimePicker;
 
 import com.android.calendar.Utils;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class SnoozeDelayActivity extends Activity implements
         TimePickerDialog.OnTimeSetListener, DialogInterface.OnCancelListener {

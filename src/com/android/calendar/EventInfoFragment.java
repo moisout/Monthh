@@ -39,6 +39,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -54,9 +55,10 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.QuickContact;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v4.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -106,6 +108,7 @@ import com.android.calendar.icalendar.IcalendarUtils;
 import com.android.calendar.icalendar.Organizer;
 import com.android.calendar.icalendar.VCalendar;
 import com.android.calendar.icalendar.VEvent;
+import com.android.calendar.settings.GeneralPreferences;
 import com.android.calendarcommon2.DateException;
 import com.android.calendarcommon2.Duration;
 import com.android.calendarcommon2.EventRecurrence;
@@ -119,8 +122,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.maurice.monthh.BuildConfig;
-import com.maurice.monthh.R;
+import ws.xsoh.etar.BuildConfig;
+import ws.xsoh.etar.R;
 
 import static android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
@@ -227,16 +230,17 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         Calendars.CALENDAR_ACCESS_LEVEL, // 10
         Events.CALENDAR_COLOR,       // 11
         Events.EVENT_COLOR,          // 12
-        Events.HAS_ATTENDEE_DATA,    // 13
-        Events.ORGANIZER,            // 14
-        Events.HAS_ALARM,            // 15
-        Calendars.MAX_REMINDERS,     // 16
-        Calendars.ALLOWED_REMINDERS, // 17
-        Events.CUSTOM_APP_PACKAGE,   // 18
-        Events.CUSTOM_APP_URI,       // 19
-        Events.DTEND,                // 20
-        Events.DURATION,             // 21
-        Events.ORIGINAL_SYNC_ID      // 22 do not remove; used in DeleteEventHelper
+        Events.STATUS,               // 13
+        Events.HAS_ATTENDEE_DATA,    // 14
+        Events.ORGANIZER,            // 15
+        Events.HAS_ALARM,            // 16
+        Calendars.MAX_REMINDERS,     // 17
+        Calendars.ALLOWED_REMINDERS, // 18
+        Events.CUSTOM_APP_PACKAGE,   // 19
+        Events.CUSTOM_APP_URI,       // 20
+        Events.DTEND,                // 21
+        Events.DURATION,             // 22
+        Events.ORIGINAL_SYNC_ID      // 23 do not remove; used in DeleteEventHelper
     };
     private static final int EVENT_INDEX_ID = 0;
     private static final int EVENT_INDEX_TITLE = 1;
@@ -251,15 +255,16 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private static final int EVENT_INDEX_ACCESS_LEVEL = 10;
     private static final int EVENT_INDEX_CALENDAR_COLOR = 11;
     private static final int EVENT_INDEX_EVENT_COLOR = 12;
-    private static final int EVENT_INDEX_HAS_ATTENDEE_DATA = 13;
-    private static final int EVENT_INDEX_ORGANIZER = 14;
-    private static final int EVENT_INDEX_HAS_ALARM = 15;
-    private static final int EVENT_INDEX_MAX_REMINDERS = 16;
-    private static final int EVENT_INDEX_ALLOWED_REMINDERS = 17;
-    private static final int EVENT_INDEX_CUSTOM_APP_PACKAGE = 18;
-    private static final int EVENT_INDEX_CUSTOM_APP_URI = 19;
-    private static final int EVENT_INDEX_DTEND = 20;
-    private static final int EVENT_INDEX_DURATION = 21;
+    private static final int EVENT_INDEX_STATUS = 13;
+    private static final int EVENT_INDEX_HAS_ATTENDEE_DATA = 14;
+    private static final int EVENT_INDEX_ORGANIZER = 15;
+    private static final int EVENT_INDEX_HAS_ALARM = 16;
+    private static final int EVENT_INDEX_MAX_REMINDERS = 17;
+    private static final int EVENT_INDEX_ALLOWED_REMINDERS = 18;
+    private static final int EVENT_INDEX_CUSTOM_APP_PACKAGE = 19;
+    private static final int EVENT_INDEX_CUSTOM_APP_URI = 20;
+    private static final int EVENT_INDEX_DTEND = 21;
+    private static final int EVENT_INDEX_DURATION = 22;
     private static final String[] ATTENDEES_PROJECTION = new String[] {
         Attendees._ID,                      // 0
         Attendees.ATTENDEE_NAME,            // 1
@@ -298,7 +303,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private static int DIALOG_TOP_MARGIN = 8;
 
 
-    private final ArrayList<LinearLayout> mReminderViews = new ArrayList<LinearLayout>(0);
+    private final ArrayList<ConstraintLayout> mReminderViews = new ArrayList<ConstraintLayout>(0);
     public ArrayList<ReminderEntry> mReminders;
     public ArrayList<ReminderEntry> mOriginalReminders = new ArrayList<ReminderEntry>();
     public ArrayList<ReminderEntry> mUnsupportedReminders = new ArrayList<ReminderEntry>();
@@ -358,6 +363,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     private View mHeadlines;
     private ScrollView mScrollView;
     private View mLoadingMsgView;
+    private View mErrorMsgView;
     private ObjectAnimator mAnimateAlpha;
     private long mLoadingMsgStartTime;
     private final Runnable mLoadingMsgAlphaUpdater = new Runnable() {
@@ -765,15 +771,16 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         if (myToolbar != null && activity != null) {
             activity.setSupportActionBar(myToolbar);
             activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-            myToolbar.setNavigationIcon(R.drawable.ic_ab_back);
+            myToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         }
 
         mScrollView = (ScrollView) mView.findViewById(R.id.event_info_scroll_view);
         mLoadingMsgView = mView.findViewById(R.id.event_info_loading_msg);
+        mErrorMsgView = mView.findViewById(R.id.event_info_error_msg);
         mTitle = (TextView) mView.findViewById(R.id.title);
         mWhenDateTime = (TextView) mView.findViewById(R.id.when_datetime);
         mWhere = (TextView) mView.findViewById(R.id.where);
-        mDesc = (ExpandableTextView) mView.findViewById(R.id.description);
+        mDesc =  mView.findViewById(R.id.description);
         mHeadlines = mView.findViewById(R.id.event_info_headline);
         mLongAttendees = (AttendeesView) mView.findViewById(R.id.long_attendee_list);
 
@@ -818,6 +825,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
 
         mLoadingMsgView.setAlpha(0);
         mScrollView.setAlpha(0);
+        mErrorMsgView.setVisibility(View.INVISIBLE);
         mLoadingMsgView.postDelayed(mLoadingMsgAlphaUpdater, LOADING_MSG_DELAY);
 
         // start loading the data
@@ -881,7 +889,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
 
         // Set reminders variables
 
-        SharedPreferences prefs = GeneralPreferences.getSharedPreferences(mActivity);
+        SharedPreferences prefs = GeneralPreferences.Companion.getSharedPreferences(mActivity);
         String defaultReminderString = prefs.getString(
                 GeneralPreferences.KEY_DEFAULT_REMINDER, GeneralPreferences.NO_REMINDER_STRING);
         mDefaultReminderMinutes = Integer.parseInt(defaultReminderString);
@@ -902,11 +910,11 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     /**
      * Initializes the event cursor, which is expected to point to the first
      * (and only) result from a query.
-     * @return true if the cursor is empty.
+     * @return false if the cursor is empty, true otherwise
      */
     private boolean initEventCursor() {
         if ((mEventCursor == null) || (mEventCursor.getCount() == 0)) {
-            return true;
+            return false;
         }
         mEventCursor.moveToFirst();
         mEventId = mEventCursor.getInt(EVENT_INDEX_ID);
@@ -918,7 +926,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             (mReminders != null && mReminders.size() > 0);
         mMaxReminders = mEventCursor.getInt(EVENT_INDEX_MAX_REMINDERS);
         mCalendarAllowedReminders =  mEventCursor.getString(EVENT_INDEX_ALLOWED_REMINDERS);
-        return false;
+        return true;
     }
 
     @SuppressWarnings("fallthrough")
@@ -1191,7 +1199,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             if (IcalendarUtils.writeCalendarToFile(calendar, inviteFile)) {
                 if (type == ShareType.INTENT) {
                     inviteFile.setReadable(true, false);     // Set world-readable
-                    Uri icsFile = FileProvider.getUriForFile(getContext(),
+                    Uri icsFile = FileProvider.getUriForFile(getActivity(),
                             BuildConfig.APPLICATION_ID + ".provider", inviteFile);
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
@@ -1212,7 +1220,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
                     // For now, we are duplicating ics file and using that as the vcs file
                     // TODO: revisit above
                     if (IcalendarUtils.copyFile(inviteFile, vcsInviteFile)) {
-                        Uri vcsFile = FileProvider.getUriForFile(getContext(),
+                        Uri vcsFile = FileProvider.getUriForFile(getActivity(),
                                 BuildConfig.APPLICATION_ID + ".provider", vcsInviteFile);
                         Intent mmsShareIntent = new Intent();
                         mmsShareIntent.setAction(Intent.ACTION_SEND);
@@ -1419,6 +1427,12 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         }
     }
 
+    private void displayEventNotFound() {
+        mErrorMsgView.setVisibility(View.VISIBLE);
+        mScrollView.setVisibility(View.GONE);
+        mLoadingMsgView.setVisibility(View.GONE);
+    }
+
     private void updateEvent(View view) {
         if (mEventCursor == null || view == null) {
             return;
@@ -1472,6 +1486,12 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         // What
         if (eventName != null) {
             setTextCommon(view, R.id.title, eventName);
+        }
+
+        Integer status = mEventCursor.getInt(EVENT_INDEX_STATUS);
+        if (status == Events.STATUS_CANCELED) {
+            TextView textView = (TextView) view.findViewById(R.id.title);
+            textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         // When
@@ -1653,7 +1673,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
         }
 
         AccessibilityEvent event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_FOCUSED);
-        event.setClassName(getClass().getName());
+        event.setClassName(EventInfoFragment.class.getName());
         event.setPackageName(getActivity().getPackageName());
         List<CharSequence> text = event.getText();
 
@@ -2077,7 +2097,7 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
     public void onClick(View view) {
 
         // This must be a click on one of the "remove reminder" buttons
-        LinearLayout reminderItem = (LinearLayout) view.getParent();
+        ConstraintLayout reminderItem = (ConstraintLayout) view.getParent();
         LinearLayout parent = (LinearLayout) reminderItem.getParent();
         parent.removeView(reminderItem);
         mReminderViews.remove(reminderItem);
@@ -2245,11 +2265,8 @@ public class EventInfoFragment extends DialogFragment implements OnCheckedChange
             switch (token) {
                 case TOKEN_QUERY_EVENT:
                     mEventCursor = Utils.matrixCursorFromCursor(cursor);
-                    if (initEventCursor()) {
-                        // The cursor is empty. This can happen if the event was
-                        // deleted.
-                        // FRAG_TODO we should no longer rely on Activity.finish()
-                        activity.finish();
+                    if (!initEventCursor()) {
+                        displayEventNotFound();
                         return;
                     }
                     if (!mCalendarColorInitialized) {

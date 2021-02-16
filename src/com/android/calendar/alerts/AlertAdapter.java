@@ -32,7 +32,7 @@ import com.android.calendar.Utils;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class AlertAdapter extends ResourceCursorAdapter {
 

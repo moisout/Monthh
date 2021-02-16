@@ -31,7 +31,7 @@ import com.android.calendar.Utils;
 
 import java.util.Arrays;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 /**
  * Activity which displays when the user wants to email guests from notifications.

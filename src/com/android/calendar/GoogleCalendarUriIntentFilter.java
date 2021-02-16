@@ -34,7 +34,7 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -43,7 +43,7 @@ import android.widget.Toast;
 import com.android.calendarcommon2.DateException;
 import com.android.calendarcommon2.Duration;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 public class GoogleCalendarUriIntentFilter extends Activity {
     static final boolean debug = false;
@@ -170,7 +170,7 @@ public class GoogleCalendarUriIntentFilter extends Activity {
                             Calendars.CALENDAR_ACCESS_LEVEL + " desc");
                     if (debug) Log.d(TAG, "Found: " + eventCursor.getCount());
 
-                    if (eventCursor == null || eventCursor.getCount() == 0) {
+                    if (eventCursor == null) {
                         Log.i(TAG, "NOTE: found no matches on event with id='" + syncId + "'");
                         return;
                     }

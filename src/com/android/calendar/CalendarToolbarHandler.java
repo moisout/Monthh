@@ -2,8 +2,8 @@ package com.android.calendar;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import java.util.Formatter;
 import java.util.Locale;
 
-import com.maurice.monthh.R;
+import ws.xsoh.etar.R;
 
 /**
  * Created by xsoh64 on 7/21/15.
